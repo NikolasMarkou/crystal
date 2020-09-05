@@ -17,7 +17,15 @@ Creates an N-dimensional isosceles simplex that has it's center at the origin 0.
 2. Second argument defines the distance between the point 
 
 ```python
+import crystal
 simplex = crystal.create_simplex(5, 1.)
+simplex = 
+    [[ 0.39345669 -0.15426587 -0.15426587 -0.15426587 -0.15426587]
+     [-0.15426587  0.39345669 -0.15426587 -0.15426587 -0.15426587]
+     [-0.15426587 -0.15426587  0.39345669 -0.15426587 -0.15426587]
+     [-0.15426587 -0.15426587 -0.15426587  0.39345669 -0.15426587]
+     [-0.15426587 -0.15426587 -0.15426587 -0.15426587  0.39345669]
+     [ 0.2236068   0.2236068   0.2236068   0.2236068   0.2236068 ]]
 ```
 
 ##  N-dimensional rotation matrix
