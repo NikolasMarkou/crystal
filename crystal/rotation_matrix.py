@@ -19,23 +19,18 @@ def create_rotation_matrix(
     # argument checking
     if rotations is None:
         raise ValueError("rotations matrix cannot be empty")
-
     shape = rotations.shape
-
     if len(shape) != 2:
         raise ValueError("rotations matrix must be 2 dimensional")
-
     if shape[0] != shape[1]:
         raise ValueError("rotations matrix must be square")
-
     if shape[0] <= 0:
         raise ValueError("cannot work on zero matrix")
     # --------------------------------
     d = shape[0]
-    matrix = np.identity(d, dtype=np.float)
-    nonzero_elements = np.nonzero(rotations)
-    eps = np.finfo(np.float32).eps
     rotation_list = []
+    eps = np.finfo(np.float32).eps
+    nonzero_elements = np.nonzero(rotations)
     # --------------------------------
     for i in range(len(nonzero_elements[0])):
         dim_0 = nonzero_elements[0][i]

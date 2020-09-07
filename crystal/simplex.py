@@ -14,7 +14,7 @@ def create_simplex(dimensions: int, distance: float) -> np.ndarray:
     same distance between them
     :param dimensions: The number of dimensions of the simplex
     :param distance: Distance between the points
-    :return: [distance, distance+1] matrix of points
+    :return: [dimensions+1, dimensions] matrix of points, each row a point
     """
     # --------------------------------
     # argument checking
@@ -45,10 +45,29 @@ def create_simplex(dimensions: int, distance: float) -> np.ndarray:
     sin_theta = (np.sqrt(2) / 2.) / radius
     # go through the points and normalize into the set distance
     for i in range(points):
-        norm_before = np.linalg.norm(matrix[i], ord=2)
-        matrix[i] = matrix[i] * ((distance / (sin_theta * 2.)) / norm_before)
+        norm2 = np.linalg.norm(matrix[i], ord=2)
+        matrix[i] = matrix[i] * ((distance / (sin_theta * 2.)) / norm2)
     return matrix
 
 # ==============================================================================
 
+
+def create_simplex_square(dimensions: int, distance: float) -> np.ndarray:
+    """
+    Create centered normalized N-dimensional simplex structure
+    The structure is described by N+1, N-dimensional points that have the
+    same distance between them,
+    adds an additional dimension to the end to make it square
+    :param dimensions: The number of dimensions of the simplex
+    :param distance: Distance between the points
+    :return: [dimensions+1, dimensions+1] matrix of points, each row a point,
+    last column is zeros
+    """
+    tmp = create_simplex(dimensions, distance)
+    matrix = np.hstack(
+        [tmp, np.zeros(shape=(dimensions + 1, 1), dtype=np.float)])
+    return matrix
+
+
+# ==============================================================================
 

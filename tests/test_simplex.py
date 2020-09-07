@@ -17,7 +17,7 @@ def _generate_test(dims, dist):
                 if i == j:
                     continue
                 dist_ij = np.linalg.norm(s[i]-s[j], ord=2)
-                assert dist_ij == pytest.approx(dist, 0.001)
+                assert dist_ij == pytest.approx(dist, abs=0.001)
     return _test
 
 
