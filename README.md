@@ -1,5 +1,15 @@
 # crystal
 
+## Getting started 
+
+The ``crystal`` package provides a simple and intuitive ``API`` 
+for creating and manipulating high-dimensional simplexes.
+
+![tetrahedron](images/tetrahedron.gif)
+
+I intend to use this as an initialization method for deep learning networks.
+
+## Information
 In geometry, a simplex (plural: simplexes or simplices) 
 is a generalization of the notion of a triangle or tetrahedron to arbitrary dimensions.
 
@@ -9,6 +19,8 @@ is a generalization of the notion of a triangle or tetrahedron to arbitrary dime
 * a 3-simplex is a tetrahedron,
 * a 4-simplex is a 5-cell.
 * etc ...  
+
+![simplexes in multiple dimensions](images/simplexes.jpg)
 
 ## N-dimensional simplex creation
 Creates an N-dimensional isosceles simplex that has it's center at the origin 0.
