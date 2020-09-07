@@ -51,11 +51,17 @@ simplex = \
 ```
 
 ##  N-dimensional rotation matrix
-To manipulate N-dimensional points we need a N-dimensional rotation matrix
+Now we have created a set of N-dimensional points that define a simplex we may
+need to manipulate them. 
+To rotate them around the origin 0 we need a N-dimensional rotation matrix.
+To create such a rotation matrix we call the function ```create_rotation_matrix```
+
+1. Is a NxN matrix, each point i,j defined a rotation in radians around that axis pair
+2. Second argument defines the cutoff in decimals and it is optional.
 
 ```python
 import crystal
-    rotation_matrix = create_rotation_matrix(
+rotation_matrix = crystal.create_rotation_matrix(
         np.array([
             [0, np.pi/4, 0],
             [0, 0, np.pi/4],
