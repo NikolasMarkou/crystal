@@ -55,9 +55,14 @@ To manipulate N-dimensional points we need a N-dimensional rotation matrix
 
 ```python
 import crystal
-rotation_matrix = crystal.create_rotation_matrix(
-        np.array([[0, np.pi/4], [0, 0]]), cutoff_decimals=5)
-rotation_matrix = 
-    [[ 0.70711 -0.70711]
-     [ 0.70711  0.70711]]
+    rotation_matrix = create_rotation_matrix(
+        np.array([
+            [0, np.pi/4, 0],
+            [0, 0, np.pi/4],
+            [0, 0, 0]]),
+        cutoff_decimals=5)
+rotation_matrix = \
+    [[ 0.70711    -0.70711     0.        ]
+     [ 0.50000455  0.50000455 -0.70711   ]
+     [ 0.50000455  0.50000455  0.70711   ]]
 ```
