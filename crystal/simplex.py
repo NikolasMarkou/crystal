@@ -34,12 +34,19 @@ def create_simplex(dimensions: int, distance: float) -> np.ndarray:
                    ((1. + np.sqrt(dimensions + 1.)) / dimensions)
     matrix = np.vstack([matrix, point])
     # center points to zero
-    matrix = matrix - np.mean(matrix, axis=0)
+    mean_m = np.mean(matrix, axis=0)
+    matrix = matrix - mean_m
     # all points now have sqrt(2) distance between them
+    # points lie on the surface of an n-dimensional circle
+    # calculate the radius of that circle
+    radius = np.mean(np.linalg.norm(matrix, ord=2, axis=1))
+    # angle between origin center (0)
+    # a point A and the midpoint intersection
+    sin_theta = (np.sqrt(2) / 2.) / radius
     # go through the points and normalize into the set distance
     for i in range(points):
-        normal_i_2 = np.linalg.norm(matrix[i], ord=2)
-        matrix[i] = matrix[i] / normal_i_2 * (distance / 2.)
+        norm_before = np.linalg.norm(matrix[i], ord=2)
+        matrix[i] = matrix[i] * ((distance / (sin_theta * 2.)) / norm_before)
     return matrix
 
 # ==============================================================================

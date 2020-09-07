@@ -6,6 +6,12 @@ import numpy as np
 def _generate_test(dims, dist):
     def _test():
         s = crystal.create_simplex(dims, dist)
+        # mean should be zero
+        mean_s = np.mean(s, axis=0)
+        zeros_s = np.zeros((1, dims), dtype=np.float)
+        sum_s = np.sum(mean_s - zeros_s)
+        assert sum_s == pytest.approx(0., 0.001)
+        # test between points distances, should be close to dist
         for i in range(dims):
             for j in range(dims):
                 if i == j:
@@ -16,58 +22,38 @@ def _generate_test(dims, dist):
 
 
 def test_simplex_1d():
-    s = crystal.create_simplex(1, 1)
-    pass
+    t = _generate_test(1, 1)
+    t()
 
 
 def test_simplex_2d():
-    s = crystal.create_simplex(2, 1)
-    pass
+    t = _generate_test(2, 1)
+    t()
 
 
 def test_simplex_3d():
-    s = crystal.create_simplex(3, 1)
-    pass
+    t = _generate_test(3, 1)
+    t()
 
 
 def test_simplex_4d():
-    s = crystal.create_simplex(4, 1)
-    pass
+    t = _generate_test(4, 1)
+    t()
 
 
 def test_simplex_5d():
-    s = crystal.create_simplex(5, 1)
-    pass
-
-
-def test_simplex_6d():
-    s = crystal.create_simplex(6, 1)
-    pass
-
-
-def test_simplex_7d():
-    s = crystal.create_simplex(7, 1)
-    pass
-
-
-def test_simplex_8d():
-    s = crystal.create_simplex(8, 1)
-    pass
-
-
-def test_simplex_9d():
-    s = crystal.create_simplex(9, 1)
-    pass
+    t = _generate_test(5, 1)
+    t()
 
 
 def test_simplex_10d():
-    s = crystal.create_simplex(10, 1)
-    pass
+    t = _generate_test(10, 1)
+    t()
 
 
 def test_simplex_100d():
-    s = crystal.create_simplex(100, 1)
-    pass
+    t = _generate_test(100, 1)
+    t()
 
 
 def test_simplex_1000d():
