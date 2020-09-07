@@ -21,43 +21,82 @@ def _generate_test(dims, dist):
     return _test
 
 
-def test_simplex_1d():
+def test_simplex_1d_distance1():
     t = _generate_test(1, 1)
     t()
 
 
-def test_simplex_2d():
+def test_simplex_1d_distance2():
+    t = _generate_test(1, 2)
+    t()
+
+
+def test_simplex_2d_distance1():
     t = _generate_test(2, 1)
     t()
 
 
-def test_simplex_3d():
+def test_simplex_2d_distance2():
+    t = _generate_test(2, 2)
+    t()
+
+
+def test_simplex_3d_distance1():
     t = _generate_test(3, 1)
     t()
 
 
-def test_simplex_4d():
+def test_simplex_3d_distance2():
+    t = _generate_test(3, 2)
+    t()
+
+
+def test_simplex_4d_distance1():
     t = _generate_test(4, 1)
     t()
 
 
-def test_simplex_5d():
+def test_simplex_4d_distance2():
+    t = _generate_test(4, 2)
+    t()
+
+
+def test_simplex_5d_distance1():
     t = _generate_test(5, 1)
     t()
 
 
-def test_simplex_10d():
+def test_simplex_5d_distance2():
+    t = _generate_test(5, 2)
+    t()
+
+
+def test_simplex_10d_distance1():
     t = _generate_test(10, 1)
     t()
 
 
-def test_simplex_100d():
+def test_simplex_10d_distance2():
+    t = _generate_test(10, 2)
+    t()
+
+
+def test_simplex_100d_distance1():
     t = _generate_test(100, 1)
     t()
 
 
-def test_simplex_1000d():
+def test_simplex_100d_distance2():
+    t = _generate_test(100, 2)
+    t()
+
+
+def test_simplex_1000d_distance1():
     t = _generate_test(1000, 1)
     t()
 
+
+def test_simplex_1000d_distance2():
+    t = _generate_test(1000, 2)
+    t()
 
