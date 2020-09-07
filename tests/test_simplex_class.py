@@ -8,7 +8,7 @@ def test_simplex_class_10x20_offset():
             input_dims=10,
             output_dims=20,
             distance=1.)
-    offset = np.random.normal(size=(11, 1))
+    offset = np.random.normal(size=(10, 1))
     s.move(offset)
 
 

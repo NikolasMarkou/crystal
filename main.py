@@ -31,5 +31,12 @@ if __name__ == "__main__":
             input_dims=3,
             output_dims=5,
             distance=1.)
-    offset = np.random.normal(size=(3, 1))
+    #offset = np.random.normal(size=(3, 1))
+    #offset = np.ones((3, 1))
+    offset = np.zeros((3, 1))
     logger.info("simplex = \n {0}".format(s.move(offset).matrix))
+    m = s.matrix
+    m2 = np.matmul(m, np.transpose(m))
+    w, v = np.linalg.eig(m2)
+    logger.info("w = \n {0}".format(w))
+    logger.info("v = \n {0}".format(v))
