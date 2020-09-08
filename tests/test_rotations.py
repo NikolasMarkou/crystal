@@ -193,6 +193,3 @@ def test_retain_distances_100():
     t()
 
 
-def test_retain_distances_1000():
-    t = _rotations_retain_distances(1000, 1.)
-    t()
