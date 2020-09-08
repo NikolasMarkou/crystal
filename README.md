@@ -95,20 +95,21 @@ rotations = np.random.normal(size=(input_dims, input_dims))
 simplex.rotate(rotations).move(offsets)
 ```
 
-```Simplex.move``` allows one to offset (move) the center of simplex.
+### ```Simplex.move``` allows one to offset (move) the center of simplex.
 
 ![Simplex.rotate](images/offset.png)
 
-```Simplex.rotate``` allows one to rotate the simplex around the origin.
+###  ```Simplex.rotate``` allows one to rotate the simplex around the origin.
 
 ![Simplex.rotate](images/rotate.png)
 
+### Eigen-values auto-calibration
 The ```Simplex``` class has the additional functionality of auto-calibrating
 the distance between the points so that the maximum eigenvalue of the matrix is ~1.0
 This is very important for stability if we wish 
 to stack many of these objects.
 
-### Analysis
+#### Analysis
 
 ```python
 import crystal
