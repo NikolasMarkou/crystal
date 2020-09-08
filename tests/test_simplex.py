@@ -5,7 +5,9 @@ import numpy as np
 
 def _generate_test(dims, dist):
     def _test():
-        s = crystal.create_simplex(dims, dist)
+        s = crystal.create_simplex(
+            dimensions=dims,
+            distance=dist)
         # mean should be zero
         mean_s = np.mean(s, axis=0)
         zeros_s = np.zeros((1, dims), dtype=np.float)

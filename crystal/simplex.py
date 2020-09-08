@@ -1,4 +1,5 @@
 import numpy as np
+from .rotation_matrix import create_rotation_matrix
 
 __author__ = "Nikolas Markou"
 __version__ = "0.1.0"
@@ -49,24 +50,6 @@ def create_simplex(dimensions: int, distance: float) -> np.ndarray:
         matrix[i] = matrix[i] * ((distance / (sin_theta * 2.)) / norm2)
     return matrix
 
-# ==============================================================================
-
-
-def create_simplex_square(dimensions: int, distance: float) -> np.ndarray:
-    """
-    Create centered normalized N-dimensional simplex structure
-    The structure is described by N+1, N-dimensional points that have the
-    same distance between them,
-    adds an additional dimension to the end to make it square
-    :param dimensions: The number of dimensions of the simplex
-    :param distance: Distance between the points
-    :return: [dimensions+1, dimensions+1] matrix of points, each row a point,
-    last column is zeros
-    """
-    tmp = create_simplex(dimensions, distance)
-    matrix = np.hstack(
-        [tmp, np.zeros(shape=(dimensions + 1, 1), dtype=np.float)])
-    return matrix
 
 # ==============================================================================
 
@@ -101,21 +84,23 @@ class Simplex:
         if self._input_dims < self._output_dims:
             diff_dims = self._output_dims - self._input_dims
             tmp = np.vstack(
-                [tmp, np.zeros(shape=(diff_dims, input_dims), dtype=np.float)])
+                [tmp,
+                 np.zeros(shape=(diff_dims, self._input_dims), dtype=np.float)])
         elif self._input_dims > self._output_dims:
             diff_dims = self._input_dims - self._output_dims
             tmp = np.vstack(
-                [tmp, np.zeros(shape=(diff_dims, input_dims), dtype=np.float)])
+                [tmp,
+                 np.zeros(shape=(diff_dims, self._input_dims), dtype=np.float)])
         # --------------------------------
-        self._simplex = tmp[0:output_dims, 0:input_dims]
-        self._offset = np.zeros(shape=(1, input_dims), dtype=np.float)
-        self._rotation = np.identity(input_dims, dtype=np.float)
+        self._simplex = tmp[0:self._output_dims, 0:self._input_dims]
+        self._offset = np.zeros(shape=(1, self._input_dims), dtype=np.float)
+        self._rotation = np.identity(self._input_dims, dtype=np.float)
 
     def move(self, offset_vector: np.ndarray):
         """
         Move the internal offset vector
         :param offset_vector:
-        :return:
+        :return: Simplex object
         """
         # --------------------------------
         # argument checking
@@ -137,23 +122,31 @@ class Simplex:
             raise ValueError("offset_vector shape not supported")
         return self
 
-    def rotate(self, rotate_matrix: np.ndarray):
+    def rotate(self, rotations: np.ndarray):
         """
         Rotate the internal rotation matrix
-        :param rotate_matrix: Matrix NxN, rotations by angle pairs
-        :return:
+        :param rotations: Matrix NxN, rotations by angle pairs
+        :return: Simplex object
         """
         # --------------------------------
         # argument checking
-        if rotate_matrix is None:
+        if rotations is None:
             raise ValueError("rotate_matrix should not be None")
         # --------------------------------
-        shape = rotate_matrix.shape
+        shape = rotations.shape
         if len(shape) == 2:
-            if shape[0] != self._input_dims or shape[1] != self._input_dims:
-                self._rotation = np.matmul(self._rotation, rotate_matrix)
+            if shape == self._rotation.shape:
+                rotation_matrix = create_rotation_matrix(rotations, debug=True)
+                self._rotation = \
+                    np.transpose(
+                        np.matmul(rotation_matrix,
+                              np.transpose(self._rotation)))
+            else:
+                raise ValueError(
+                    "rotate_matrix dims [{0}] not supported".format(shape))
         else:
-            raise ValueError("rotate_matrix shape not supported")
+            raise ValueError(
+                "rotate_matrix shape [{0}] not supported".format(shape))
         return self
 
     @property

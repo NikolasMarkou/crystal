@@ -29,6 +29,8 @@ def _forward_backwards_rotation_matrix(dims, angle):
         assert np.sum(result - identity) == pytest.approx(0., abs=0.0001)
     return _test
 
+# ------------------------------------------------------------------------------
+
 
 def test_rotation_forward_backwards_dims2_pi2():
     t = _forward_backwards_rotation_matrix(2, np.pi/2)
@@ -133,3 +135,6 @@ def test_rotation_forward_backwards_dims1000_pi3():
 def test_rotation_forward_backwards_dims1000_pi4():
     t = _forward_backwards_rotation_matrix(1000, np.pi/4)
     t()
+
+# ------------------------------------------------------------------------------
+

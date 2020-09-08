@@ -29,8 +29,10 @@ def create_rotation_matrix(
     # --------------------------------
     d = shape[0]
     rotation_list = []
+    rotations_folded = \
+        rotations - np.transpose(rotations)
     eps = np.finfo(np.float32).eps
-    nonzero_elements = np.nonzero(rotations)
+    nonzero_elements = np.nonzero(rotations_folded)
     # --------------------------------
     for i in range(len(nonzero_elements[0])):
         dim_0 = nonzero_elements[0][i]
@@ -38,7 +40,9 @@ def create_rotation_matrix(
         # ignore same axis rotation
         if dim_0 == dim_1:
             continue
-        theta = rotations[dim_0][dim_1]
+        if dim_1 > dim_0:
+            continue
+        theta = rotations_folded[dim_0][dim_1]
         # ignore very small angles
         if np.abs(theta) < eps:
             continue
@@ -54,20 +58,20 @@ def create_rotation_matrix(
 def create_rotation_matrix_by_list(
         dimensions: int,
         rotations: [tuple],
-        cutoff_decimals=-1) -> np.ndarray:
+        cutoff_decimals=-1,
+        debug=False) -> np.ndarray:
     """
     Create an n-th dimensional rotation matrix based on rotation angles provided
     :param dimensions: dimension N of the final NxN matrix
     :param rotations: list of tuples (axis0, axis1, angle in radians)
     :param cutoff_decimals: number of decimals to keep per rotation
+    :param debug: Show individual rotation matrices
     :return: NxN rotation matrix
     """
     matrix = np.identity(dimensions, dtype=np.float)
     # --------------------------------
     for rotation in rotations:
-        dim_0 = rotation[0]
-        dim_1 = rotation[1]
-        theta = rotation[2]
+        dim_0, dim_1, theta = rotation
         cos_theta = np.cos(theta)
         sin_theta = np.sin(theta)
         r_ab_theta = np.identity(dimensions, dtype=np.float)
@@ -77,6 +81,9 @@ def create_rotation_matrix_by_list(
         r_ab_theta[dim_1][dim_1] = cos_theta
         if cutoff_decimals and cutoff_decimals > 0:
             r_ab_theta = np.round(r_ab_theta, decimals=cutoff_decimals)
+        if debug:
+            print("rotation_matrix for [{0}] : \n {1}".format(
+                rotation, r_ab_theta))
         matrix = np.matmul(r_ab_theta, matrix)
     return matrix
 
