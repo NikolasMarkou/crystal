@@ -98,7 +98,7 @@ simplex.rotate(rotations).move(offsets)
 The ```Simplex``` class has the additional functionality of auto-calibrating
 the distance between the points so that the maximum eigenvalue of the matrix is ~1.0
 This is very important for stability if we wish 
-to stack many of these objects one next to another.
+to stack many of these objects.
 
 ### Analysis
 
