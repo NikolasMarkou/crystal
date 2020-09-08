@@ -147,6 +147,7 @@ def _rotations_retain_distances(input_dims, distance):
                 output_dims=output_dims,
                 distance=distance)
         rotations = np.random.normal(size=(input_dims, input_dims))
+        rotations[rotations < 0.1] = 0.
         m = s.rotate(rotations).matrix
         # mean should be zero
         mean_s = np.mean(m, axis=0)
