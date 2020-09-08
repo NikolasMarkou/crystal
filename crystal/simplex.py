@@ -77,7 +77,7 @@ class Simplex:
         if distance is None or distance <= 0:
             # auto-calibrate distance so max eigenvalue is ~1
             distance = np.polyval([
-                5.22038690e-05, -1.58045048e-03, 1.42874681e+00, -1.05974408e-02],
+                5.22038690e-05, -1.58045048e-03, np.sqrt(2), -1.05974408e-02],
                 np.sqrt(input_dims))
         # --------------------------------
         self._distance = distance
