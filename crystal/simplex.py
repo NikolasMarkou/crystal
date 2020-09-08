@@ -56,13 +56,17 @@ def create_simplex(dimensions: int, distance: float) -> np.ndarray:
 
 
 class Simplex:
-    def __init__(self, input_dims: int, output_dims: int, distance: float):
+    def __init__(self,
+                 input_dims: int,
+                 output_dims: int,
+                 distance: float = 0.0):
         """
         Create encapsulated simplex with offset and rotation matrices hidden
         internally
         :param input_dims:
         :param output_dims:
-        :param distance:
+        :param distance: set manually the distance,
+            if <= 0, it is auto-calibrated so max eigenvalue is ~1
         """
         # --------------------------------
         # argument checking
@@ -70,8 +74,11 @@ class Simplex:
             raise ValueError("input dims should be > 0")
         if output_dims <= 0:
             raise ValueError("output dims should be > 0")
-        if distance <= 0:
-            raise ValueError("distance should be > 0")
+        if distance is None or distance <= 0:
+            # auto-calibrate distance so max eigenvalue is ~1
+            distance = np.polyval([
+                5.22038690e-05, -1.58045048e-03, 1.42874681e+00, -1.05974408e-02],
+                np.sqrt(input_dims))
         # --------------------------------
         self._distance = distance
         self._input_dims = input_dims
@@ -164,7 +171,7 @@ class Simplex:
     def rotation(self) -> np.ndarray:
         return self._rotation
 
-    def lala(self, point):
+    def pdf(self, point: np.ndarray) -> np.ndarray:
         if point.shape[0] != 1:
             raise ValueError("point.shape[0] should be 1")
         if point.shape[1] != self._input_dims:
