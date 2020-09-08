@@ -51,7 +51,7 @@ simplex = \
      [ 0.28867513  0.28867513  0.28867513  0.28867513  0.28867513]]
 ```
 
-##  N-dimensional rotation matrix
+## N-dimensional rotation matrix
 Now we have created a set of N-dimensional points that define a simplex we may
 need to manipulate them. 
 To rotate them around the origin 0 we need a N-dimensional rotation matrix.
@@ -72,4 +72,48 @@ rotation_matrix = \
     [[ 0.70711    -0.70711     0.        ]
      [ 0.50000455  0.50000455 -0.70711   ]
      [ 0.50000455  0.50000455  0.70711   ]]
+```
+
+## Simplex Class
+
+The ``Simplex`` class encapsulates the simplex set of points and adds functionality
+for offsetting and rotating. 
+
+```python
+import crystal
+import numpy as np
+
+distance=1.
+input_dims = 100
+output_dims = 101
+simplex = crystal.Simplex(
+        input_dims=input_dims,
+        output_dims=output_dims,
+        distance=distance)
+offsets = np.random.normal(size=(1, input_dims))
+rotations = np.random.normal(size=(input_dims, input_dims))
+simplex.rotate(rotations).move(offsets)
+```
+
+The ```Simplex``` class has the additional functionality of auto-calibrating
+the distance between the points so that the maximum eigenvalue of the matrix is ~1.0
+This is very important for stability if we wish 
+to stack many of these objects one next to another.
+
+### Analysis
+
+```python
+import crystal
+import numpy as np
+
+input_dims = 100
+output_dims = 101
+simplex = crystal.Simplex(
+        input_dims=input_dims,
+        output_dims=output_dims)
+m = simplex.matrix
+m2 = np.matmul(m, np.transpose(m)) / input_dims
+w = np.linalg.eigvals(m2)
+max_eigenvalue = np.max(w)
+max_eigenvalue = 1.
 ```
