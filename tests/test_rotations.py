@@ -138,3 +138,60 @@ def test_rotation_forward_backwards_dims1000_pi4():
 
 # ------------------------------------------------------------------------------
 
+
+def _rotations_retain_distances(input_dims, distance):
+    def _test():
+        output_dims = input_dims + 1
+        s = crystal.Simplex(
+                input_dims=input_dims,
+                output_dims=output_dims,
+                distance=distance)
+        rotations = np.random.normal(size=(input_dims, input_dims))
+        m = s.rotate(rotations).matrix
+        # mean should be zero
+        mean_s = np.mean(m, axis=0)
+        sum_s = np.sum(mean_s)
+        assert sum_s == pytest.approx(0., 0.01)
+        # test between points distances, should be close to dist
+        for i in range(input_dims):
+            for j in range(output_dims):
+                if i == j:
+                    continue
+                dist_ij = np.linalg.norm(m[i] - m[j], ord=2)
+                assert dist_ij == pytest.approx(distance, abs=0.01)
+    return _test
+
+
+def test_retain_distances_2():
+    t = _rotations_retain_distances(2, 1.)
+    t()
+
+
+def test_retain_distances_3():
+    t = _rotations_retain_distances(2, 1.)
+    t()
+
+
+def test_retain_distances_4():
+    t = _rotations_retain_distances(4, 1.)
+    t()
+
+
+def test_retain_distances_5():
+    t = _rotations_retain_distances(5, 1.)
+    t()
+
+
+def test_retain_distances_10():
+    t = _rotations_retain_distances(10, 1.)
+    t()
+
+
+def test_retain_distances_100():
+    t = _rotations_retain_distances(100, 1.)
+    t()
+
+
+def test_retain_distances_1000():
+    t = _rotations_retain_distances(1000, 1.)
+    t()
