@@ -1,5 +1,6 @@
 import numpy as np
 from .rotation_matrix import create_rotation_matrix
+from .distributions import wigner_semicircle_distribution_pdf
 
 __author__ = "Nikolas Markou"
 __version__ = "0.1.0"
@@ -136,7 +137,7 @@ class Simplex:
         shape = rotations.shape
         if len(shape) == 2:
             if shape == self._rotation.shape:
-                rotation_matrix = create_rotation_matrix(rotations, debug=True)
+                rotation_matrix = create_rotation_matrix(rotations, debug=False)
                 self._rotation = \
                     np.transpose(
                         np.matmul(rotation_matrix,
@@ -162,5 +163,15 @@ class Simplex:
     @property
     def rotation(self) -> np.ndarray:
         return self._rotation
+
+    def lala(self, point):
+        if point.shape[0] != 1:
+            raise ValueError("point.shape[0] should be 1")
+        if point.shape[1] != self._input_dims:
+            raise ValueError("point.shape[1] should be {0}".format(
+                self._input_dims))
+        tmp = self.matrix - point
+        tmp = np.linalg.norm(tmp, axis=0, ord=2)
+        return wigner_semicircle_distribution_pdf(tmp, self._distance)
 
 # ==============================================================================
