@@ -1,12 +1,9 @@
 import numpy as np
 from .rotation_matrix import create_rotation_matrix
-from .distributions import wigner_semicircle_distribution_pdf
 
 __author__ = "Nikolas Markou"
 __version__ = "0.1.0"
 __license__ = "MIT"
-
-# ==============================================================================
 
 
 def create_simplex(dimensions: int, distance: float) -> np.ndarray:
@@ -70,10 +67,10 @@ class Simplex:
         """
         # --------------------------------
         # argument checking
-        if input_dims <= 0:
+        if input_dims is None or input_dims <= 0:
             raise ValueError("input dims should be > 0")
-        if output_dims <= 0:
-            raise ValueError("output dims should be > 0")
+        if output_dims is None or output_dims <= 0:
+            output_dims = input_dims + 1
         if distance is None or distance <= 0:
             # auto-calibrate distance so max eigenvalue is ~1
             distance = np.polyval([
@@ -171,14 +168,17 @@ class Simplex:
     def rotation(self) -> np.ndarray:
         return self._rotation
 
-    def pdf(self, point: np.ndarray) -> np.ndarray:
-        if point.shape[0] != 1:
-            raise ValueError("point.shape[0] should be 1")
-        if point.shape[1] != self._input_dims:
-            raise ValueError("point.shape[1] should be {0}".format(
-                self._input_dims))
-        tmp = self.matrix - point
-        tmp = np.linalg.norm(tmp, axis=0, ord=2)
-        return wigner_semicircle_distribution_pdf(tmp, self._distance)
+    @property
+    def input_dims(self) -> int:
+        return self._input_dims
+
+    @property
+    def output_dims(self) -> int:
+        return self._output_dims
+
+    @property
+    def distance(self) -> float:
+        return self._distance
+
 
 # ==============================================================================
