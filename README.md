@@ -97,7 +97,7 @@ simplex.rotate(rotations).move(offsets)
 
 ### ```Simplex.move``` allows one to offset (move) the center of simplex.
 
-![Simplex.rotate](images/offset.png)
+![Simplex.move](images/add_vectors.png)
 
 ###  ```Simplex.rotate``` allows one to rotate the simplex around the origin.
 
