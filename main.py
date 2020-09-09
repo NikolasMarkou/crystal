@@ -27,16 +27,13 @@ logger = logging.getLogger("crystal")
 
 
 if __name__ == "__main__":
+    input_dims = 3
+    output_dims = 10
     s = crystal.Simplex(
-            input_dims=3,
-            output_dims=5,
-            distance=1.)
-    #offset = np.random.normal(size=(3, 1))
-    #offset = np.ones((3, 1))
-    offset = np.zeros((3, 1))
-    logger.info("simplex = \n {0}".format(s.move(offset).matrix))
-    m = s.matrix
-    m2 = np.matmul(m, np.transpose(m))
-    w, v = np.linalg.eig(m2)
-    logger.info("w = \n {0}".format(w))
-    logger.info("v = \n {0}".format(v))
+            input_dims=input_dims,
+            output_dims=output_dims,
+            distance=-1)
+    points = np.random.normal(size=(30, input_dims))
+    prob = crystal.pdf(s, points,
+                       crystal.wigner_semicircle_distribution_pdf)
+    logger.info("{0}".format(prob))
