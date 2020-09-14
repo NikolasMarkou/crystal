@@ -86,13 +86,8 @@ class Simplex:
             dimensions=self._input_dims,
             distance=self._distance)
         # --------------------------------
-        if self._input_dims < self._output_dims:
-            diff_dims = self._output_dims - self._input_dims
-            tmp = np.vstack(
-                [tmp,
-                 np.zeros(shape=(diff_dims, self._input_dims), dtype=np.float)])
-        elif self._input_dims > self._output_dims:
-            diff_dims = self._input_dims - self._output_dims
+        diff_dims = abs(self._output_dims - self._input_dims)
+        if diff_dims > 0:
             tmp = np.vstack(
                 [tmp,
                  np.zeros(shape=(diff_dims, self._input_dims), dtype=np.float)])

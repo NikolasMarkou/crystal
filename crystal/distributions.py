@@ -5,9 +5,15 @@ from .simplex import Simplex
 # ==============================================================================
 
 
-def wigner_semicircle_distribution_pdf(x: float, r: float) -> float:
-    r_2 = r ** 2.
-    x_2 = x ** 2
+def wigner_semicircle_distribution_pdf(x: np.ndarray, r: float) -> np.ndarray:
+    """
+
+    :param x: Nx1 dimensional point
+    :param r:
+    :return:
+    """
+    r_2 = np.power(r, 2.)
+    x_2 = np.power(x, 2.)
     tmp = np.maximum(0., r_2 - x_2)
     return (2. / (np.pi * r_2)) * np.sqrt(tmp)
 
@@ -17,7 +23,7 @@ def wigner_semicircle_distribution_pdf(x: float, r: float) -> float:
 
 def pdf(s: Simplex, points: np.ndarray, f=None) -> np.ndarray:
     """
-
+    Returns the probability of each point
     :param s:
     :param points:
     :param f:
@@ -35,10 +41,10 @@ def pdf(s: Simplex, points: np.ndarray, f=None) -> np.ndarray:
         shape=(points.shape[0], s.output_dims),
         dtype=np.float)
     for i in range(points.shape[0]):
-        tmp = s.matrix - points[i, :]
-        tmp = np.linalg.norm(tmp, axis=0, ord=2)
-        distances[i, :] = tmp[:]
+        tmp1 = s.matrix - points[i]
+        tmp2 = np.linalg.norm(tmp1, axis=1, ord=2)
+        distances[i, :] = tmp2[:]
     # --------------------------------
-    return f(tmp, s.distance)
+    return f(distances, s.distance)
 
 # ==============================================================================
