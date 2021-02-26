@@ -5,8 +5,12 @@ __author__ = "Nikolas Markou"
 __version__ = "0.1.0"
 __license__ = "MIT"
 
+# ==============================================================================
 
-def create_simplex(dimensions: int, distance: float) -> np.ndarray:
+
+def create_simplex_matrix(
+        dimensions: int,
+        distance: float) -> np.ndarray:
     """
     Create centered normalized N-dimensional simplex structure
     The structure is described by N+1, N-dimensional points that have the
@@ -53,6 +57,7 @@ def create_simplex(dimensions: int, distance: float) -> np.ndarray:
 
 
 class Simplex:
+    # ------------------------------------------------------------------------------
     def __init__(self,
                  input_dims: int,
                  output_dims: int,
@@ -82,7 +87,7 @@ class Simplex:
         self._output_dims = output_dims
         # --------------------------------
         # simplex is _input_dims+1 x _input_dims
-        tmp = create_simplex(
+        tmp = create_simplex_matrix(
             dimensions=self._input_dims,
             distance=self._distance)
         # --------------------------------
@@ -95,6 +100,8 @@ class Simplex:
         self._simplex = tmp[0:self._output_dims, 0:self._input_dims]
         self._offset = np.zeros(shape=(1, self._input_dims), dtype=np.float)
         self._rotation = np.identity(self._input_dims, dtype=np.float)
+
+    # ------------------------------------------------------------------------------
 
     def move(self, offset_vector: np.ndarray):
         """
@@ -121,6 +128,8 @@ class Simplex:
         else:
             raise ValueError("offset_vector shape not supported")
         return self
+
+    # ------------------------------------------------------------------------------
 
     def rotate(self, rotations: np.ndarray):
         """
@@ -149,31 +158,44 @@ class Simplex:
                 "rotate_matrix shape [{0}] not supported".format(shape))
         return self
 
+    # ------------------------------------------------------------------------------
+
     @property
     def matrix(self) -> np.ndarray:
         return self._offset + \
                np.transpose(
                    np.matmul(self._rotation, np.transpose(self._simplex)))
 
+    # ------------------------------------------------------------------------------
+
     @property
     def offset(self) -> np.ndarray:
         return self._offset
+
+    # ------------------------------------------------------------------------------
 
     @property
     def rotation(self) -> np.ndarray:
         return self._rotation
 
+    # ------------------------------------------------------------------------------
+
     @property
     def input_dims(self) -> int:
         return self._input_dims
+
+    # ------------------------------------------------------------------------------
 
     @property
     def output_dims(self) -> int:
         return self._output_dims
 
+    # ------------------------------------------------------------------------------
+
     @property
     def distance(self) -> float:
         return self._distance
 
+    # ------------------------------------------------------------------------------
 
 # ==============================================================================

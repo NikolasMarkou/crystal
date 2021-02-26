@@ -12,6 +12,10 @@ def wigner_semicircle_distribution_pdf(x: np.ndarray, r: float) -> np.ndarray:
     :param r: float, radius of the semicirles
     :return: Nx1 float, probability density function at each point
     """
+    # --------------------------------
+    # argument checking
+
+    # --------------------------------
     r_2 = np.power(r, 2.)
     x_2 = np.power(x, 2.)
     p0 = np.maximum(0., r_2 - x_2)
@@ -30,6 +34,7 @@ def pdf(s: Simplex, points: np.ndarray, f=None) -> np.ndarray:
     :param f:
     :return:
     """
+    # --------------------------------
     # argument checking
     if s is None:
         raise ValueError("simplex should not be None")

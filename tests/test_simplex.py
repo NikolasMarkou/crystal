@@ -5,7 +5,7 @@ import numpy as np
 
 def _generate_test(dims, dist):
     def _test():
-        s = crystal.create_simplex(
+        s = crystal.create_simplex_matrix(
             dimensions=dims,
             distance=dist)
         # mean should be zero

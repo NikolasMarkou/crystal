@@ -27,28 +27,33 @@ is a generalization of the notion of a triangle or tetrahedron to arbitrary dime
 Creates an N-dimensional isosceles simplex that has it's center at the origin 0.
 
 1. First argument defines the number of dimensions.
-2. Second argument defines the distance between the point 
+2. Second argument defines the distance between the point
 
 ```python
 import crystal
-simplex = crystal.create_simplex(2, 1.)
-simplex = \
-    [[ 0.14942925 -0.55767754]
+
+simplex = crystal.create_simplex_matrix(2, 1.)
+simplex =
+    [[0.14942925 - 0.55767754]
      [-0.55767754  0.14942925]
-     [ 0.40824829  0.40824829]]
+    [0.40824829
+0.40824829]]
 
 ```
 
 ```python
 import crystal
-simplex = crystal.create_simplex(5, 1.)
-simplex = \
-    [[ 0.5079504  -0.19915638 -0.19915638 -0.19915638 -0.19915638]
-     [-0.19915638  0.5079504  -0.19915638 -0.19915638 -0.19915638]
-     [-0.19915638 -0.19915638  0.5079504  -0.19915638 -0.19915638]
-     [-0.19915638 -0.19915638 -0.19915638  0.5079504  -0.19915638]
-     [-0.19915638 -0.19915638 -0.19915638 -0.19915638  0.5079504 ]
-     [ 0.28867513  0.28867513  0.28867513  0.28867513  0.28867513]]
+
+simplex = crystal.create_simplex_matrix(5, 1.)
+simplex =
+    [[0.5079504 - 0.19915638 - 0.19915638 - 0.19915638 - 0.19915638]
+     [-0.19915638  0.5079504 - 0.19915638 - 0.19915638 - 0.19915638]
+    [-0.19915638 - 0.19915638
+0.5079504 - 0.19915638 - 0.19915638]
+[-0.19915638 - 0.19915638 - 0.19915638  0.5079504 - 0.19915638]
+[-0.19915638 - 0.19915638 - 0.19915638 - 0.19915638
+0.5079504]
+[0.28867513  0.28867513  0.28867513  0.28867513  0.28867513]]
 ```
 
 ## N-dimensional rotation matrix
