@@ -61,30 +61,39 @@ def create_rotation_matrix_by_list(
         cutoff_decimals=-1,
         debug=False) -> np.ndarray:
     """
-    Create an n-th dimensional rotation matrix based on rotation angles provided
+    Create an n-th dimensional rotation matrix based on rotation angles provided.
+
+    Uses direct Givens rotation application for O(N³) complexity instead of
+    O(N^5) from naive matrix multiplication approach.
+
     :param dimensions: dimension N of the final NxN matrix
     :param rotations: list of tuples (axis0, axis1, angle in radians)
     :param cutoff_decimals: number of decimals to keep per rotation
     :param debug: Show individual rotation matrices
     :return: NxN rotation matrix
     """
-    matrix = np.identity(dimensions, dtype=np.float)
+    matrix = np.identity(dimensions, dtype=np.float64)
     # --------------------------------
+    # Apply Givens rotations directly to rows instead of full matrix multiply.
+    # Each Givens rotation only affects 2 rows, so O(N) per rotation.
+    # Total: O(N² rotations) × O(N) = O(N³) instead of O(N^5).
     for rotation in rotations:
         dim_0, dim_1, theta = rotation
         cos_theta = np.cos(theta)
         sin_theta = np.sin(theta)
-        r_ab_theta = np.identity(dimensions, dtype=np.float)
-        r_ab_theta[dim_0][dim_0] = cos_theta
-        r_ab_theta[dim_0][dim_1] = -sin_theta
-        r_ab_theta[dim_1][dim_0] = sin_theta
-        r_ab_theta[dim_1][dim_1] = cos_theta
         if cutoff_decimals and cutoff_decimals > 0:
-            r_ab_theta = np.round(r_ab_theta, decimals=cutoff_decimals)
+            cos_theta = np.round(cos_theta, decimals=cutoff_decimals)
+            sin_theta = np.round(sin_theta, decimals=cutoff_decimals)
         if debug:
-            print("rotation_matrix for [{0}] : \n {1}".format(
-                rotation, r_ab_theta))
-        matrix = np.matmul(r_ab_theta, matrix)
+            print("rotation [{0}]: cos={1}, sin={2}".format(
+                rotation, cos_theta, sin_theta))
+        # Apply Givens rotation: only rows dim_0 and dim_1 are affected
+        row_0 = matrix[dim_0].copy()
+        row_1 = matrix[dim_1].copy()
+        matrix[dim_0] = cos_theta * row_0 - sin_theta * row_1
+        matrix[dim_1] = sin_theta * row_0 + cos_theta * row_1
+    if cutoff_decimals and cutoff_decimals > 0:
+        matrix = np.round(matrix, decimals=cutoff_decimals)
     return matrix
 
 # ==============================================================================

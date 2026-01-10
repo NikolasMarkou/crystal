@@ -29,11 +29,11 @@ def create_simplex_matrix(
     # An N-Dimensional simplex requires N+1 points
     points = dimensions + 1
     # create identity matrix (N points)
-    matrix = np.identity(dimensions, dtype=np.float)
+    matrix = np.identity(dimensions, dtype=np.float64)
     # we create the last point
     # Now we need a n+1-th point with the same distance to all other points.
     # We have to choose (x, x, ... x).
-    point = np.ones(shape=(1, dimensions), dtype=np.float) * \
+    point = np.ones(shape=(1, dimensions), dtype=np.float64) * \
                    ((1. + np.sqrt(dimensions + 1.)) / dimensions)
     matrix = np.vstack([matrix, point])
     # center points to zero
@@ -77,10 +77,9 @@ class Simplex:
         if output_dims is None or output_dims <= 0:
             output_dims = input_dims + 1
         if distance is None or distance <= 0:
-            # auto-calibrate distance so max eigenvalue is ~1
-            distance = np.polyval([
-                5.22038690e-05, -1.58045048e-03, np.sqrt(2), -1.05974408e-02],
-                np.sqrt(input_dims))
+            # auto-calibrate distance so max eigenvalue of (MM^T / N) is ~1.0
+            # Exact analytic solution derived from Gram matrix eigenvalues
+            distance = np.sqrt((2.0 * input_dims ** 2) / (input_dims + 1))
         # --------------------------------
         self._distance = distance
         self._input_dims = input_dims
@@ -95,11 +94,11 @@ class Simplex:
         if diff_dims > 0:
             tmp = np.vstack(
                 [tmp,
-                 np.zeros(shape=(diff_dims, self._input_dims), dtype=np.float)])
+                 np.zeros(shape=(diff_dims, self._input_dims), dtype=np.float64)])
         # --------------------------------
         self._simplex = tmp[0:self._output_dims, 0:self._input_dims]
-        self._offset = np.zeros(shape=(1, self._input_dims), dtype=np.float)
-        self._rotation = np.identity(self._input_dims, dtype=np.float)
+        self._offset = np.zeros(shape=(1, self._input_dims), dtype=np.float64)
+        self._rotation = np.identity(self._input_dims, dtype=np.float64)
 
     # ------------------------------------------------------------------------------
 

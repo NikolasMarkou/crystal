@@ -49,7 +49,7 @@ def pdf(s: Simplex, points: np.ndarray, f=None) -> np.ndarray:
     # --------------------------------
     distances = np.zeros(
         shape=(points.shape[0], s.output_dims),
-        dtype=np.float)
+        dtype=np.float64)
     for i in range(points.shape[0]):
         tmp1 = s.matrix - points[i]
         tmp2 = np.linalg.norm(tmp1, axis=1, ord=2)

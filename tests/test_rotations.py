@@ -5,10 +5,10 @@ import numpy as np
 
 def _forward_backwards_rotation_matrix(dims, angle):
     def _test():
-        random_points = np.random.randint(0, dims, 2, dtype=np.int)
+        random_points = np.random.randint(0, dims, 2, dtype=int)
 
-        zeros_plus = np.zeros((dims, dims), dtype=np.float)
-        zeros_minus = np.zeros((dims, dims), dtype=np.float)
+        zeros_plus = np.zeros((dims, dims), dtype=np.float64)
+        zeros_minus = np.zeros((dims, dims), dtype=np.float64)
 
         x = random_points[0]
         y = random_points[1]
@@ -25,7 +25,7 @@ def _forward_backwards_rotation_matrix(dims, angle):
         result = np.matmul(
             rotation_matrix_plus_pi_4,
             rotation_matrix_minus_pi_4)
-        identity = np.identity(dims, dtype=np.float)
+        identity = np.identity(dims, dtype=np.float64)
         assert np.sum(result - identity) == pytest.approx(0., abs=0.0001)
     return _test
 

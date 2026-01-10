@@ -10,7 +10,7 @@ def _generate_test(dims, dist):
             distance=dist)
         # mean should be zero
         mean_s = np.mean(s, axis=0)
-        zeros_s = np.zeros((1, dims), dtype=np.float)
+        zeros_s = np.zeros((1, dims), dtype=np.float64)
         sum_s = np.sum(mean_s - zeros_s)
         assert sum_s == pytest.approx(0., 0.001)
         # test between points distances, should be close to dist
