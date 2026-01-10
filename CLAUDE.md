@@ -20,8 +20,7 @@ crystal/
 │   ├── rotation_matrix.py # N-dimensional rotation matrices
 │   └── distributions.py   # Wigner semicircle PDF functions
 ├── tests/                # pytest test suite (62 tests, 1D-1000D coverage)
-├── main.py               # Demo script
-└── test_keras.ipynb      # Keras comparison notebook
+└── main.py               # Demo script
 ```
 
 ## Core API
@@ -83,9 +82,9 @@ Tests cover dimensions from 1D to 1000D:
 
 ## Dependencies
 
-- numpy (modern versions, uses `np.float64`)
-- pytest for testing
-- Keras/TensorFlow for notebook examples (optional)
+- numpy>=1.22.0
+- pytest>=8.0.0 for testing
+- setuptools>=70.0.0
 
 ## Code Style
 
