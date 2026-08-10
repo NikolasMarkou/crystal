@@ -41,6 +41,12 @@ so as N grows, vertex vectors become increasingly close to orthogonal.
 
 $$V = \frac{d^N}{N!}\sqrt{\frac{N+1}{2^N}}$$
 
+A full-rank simplex (edge vectors linearly independent, $\det(G) > 0$) is the
+non-degenerate case. If $\det(G) \to 0$, the points have collapsed into
+fewer effective dimensions than N — a degenerate simplex, regardless of
+scale. "Optimal" means both full rank *and* correctly scaled; the
+Eigenvalue Auto-Calibration section below handles the scale half of that.
+
 ## N-dimensional simplex creation
 Creates an N-dimensional isosceles simplex centered at the origin 0.
 
@@ -162,3 +168,95 @@ w = np.linalg.eigvals(m2)
 max_eigenvalue = np.max(w)
 # max_eigenvalue ≈ 1.0
 ```
+
+## Deep Learning Usage (Keras)
+
+A simplex can be used two ways in a network: as a **fixed, non-trainable**
+classification head, or as a **trainable** set of vectors nudged toward
+simplex geometry with a volume-based loss. Which one is right depends on
+whether you know in advance that N+1 equiangular directions are the correct
+target.
+
+### Option A: Fixed simplex classifier (non-trainable)
+
+The simplex vertices are frozen. Only the encoder producing `x` is trained;
+it's pushed to align with the correct vertex. Guaranteed full rank and
+correctly scaled, permanently — nothing to degenerate.
+
+```python
+import crystal
+import keras
+from keras import layers, ops
+
+input_dims = 128
+num_classes = input_dims + 1  # an N-dim simplex has N+1 vertices
+
+M = crystal.create_simplex_matrix(input_dims, distance=-1)  # auto-calibrated, (N+1, N)
+
+class SimplexHead(layers.Layer):
+    def __init__(self, simplex_matrix, **kwargs):
+        super().__init__(**kwargs)
+        self.M = ops.convert_to_tensor(simplex_matrix, dtype="float32")
+
+    def call(self, x):
+        return ops.matmul(x, ops.transpose(self.M))  # cosine-similarity logits
+
+inputs = keras.Input(shape=(784,))
+x = layers.Dense(256, activation="relu")(inputs)
+x = layers.Dense(input_dims)(x)          # encoder output, N-dimensional
+logits = SimplexHead(M)(x)               # frozen simplex, N+1 outputs
+outputs = layers.Softmax()(logits)
+
+model = keras.Model(inputs, outputs)
+model.compile(optimizer="adam", loss="categorical_crossentropy")
+```
+
+### Option B: Trainable vectors + volume regularization
+
+Let representations be learned normally, and add a Gram-determinant loss
+term that discourages dimensional collapse (rank deficiency), without fixing
+the geometry in advance.
+
+```python
+import keras
+from keras import ops
+
+def volume_loss(vectors, eps=1e-6):
+    """Encourages a batch of (N+1, N) vectors to stay full-rank / well-spread."""
+    centered = vectors - ops.mean(vectors, axis=0, keepdims=True)
+    gram = ops.matmul(centered, ops.transpose(centered))
+    identity = ops.eye(ops.shape(gram)[0])
+    sign, logdet = ops.slogdet(gram + eps * identity)
+    return -logdet  # minimizing this maximizes volume
+
+class VolumeRegularizedModel(keras.Model):
+    def __init__(self, encoder, lambda_=0.01, **kwargs):
+        super().__init__(**kwargs)
+        self.encoder = encoder
+        self.lambda_ = lambda_
+
+    def train_step(self, data):
+        x, y = data
+        with ops.GradientTape() as tape:
+            features = self.encoder(x, training=True)
+            task_loss = self.compute_loss(x, y, features)
+            loss = task_loss + self.lambda_ * volume_loss(features)
+        trainable_vars = self.encoder.trainable_variables
+        gradients = tape.gradient(loss, trainable_vars)
+        self.optimizer.apply_gradients(zip(gradients, trainable_vars))
+        return {"loss": loss, "task_loss": task_loss}
+```
+
+Use a small `lambda_` — pushing volume too aggressively fights the task loss;
+too little and collapse risk returns. Track `volume_loss` as a standalone
+metric during training as an early warning for representation collapse,
+independent of downstream task performance.
+
+### Which to choose
+
+| | Fixed simplex (A) | Trainable + volume loss (B) |
+|---|---|---|
+| Guarantee | always full rank, always correctly scaled | encouraged, not guaranteed |
+| Flexibility | geometry fixed in advance | geometry emerges from data |
+| Best for | known, fixed number of classes | open-set, contrastive, self-supervised |
+| Risk | wrong if N+1 classes don't match data structure | can still collapse if `lambda_` too small |
