@@ -3,7 +3,7 @@ from typing import Optional
 from .rotation_matrix import create_rotation_matrix
 
 __author__ = "Nikolas Markou"
-__version__ = "0.1.0"
+__version__ = "0.2.0"
 __license__ = "MIT"
 
 # ==============================================================================
@@ -53,7 +53,7 @@ class Simplex:
     def __init__(self,
                  input_dims: int,
                  output_dims: Optional[int] = None,
-                 distance: float = 0.0):
+                 distance: Optional[float] = 0.0):
         """
         Create encapsulated simplex with offset and rotation matrices hidden
         internally
@@ -127,7 +127,8 @@ class Simplex:
 
     def rotate(self, rotations: np.ndarray):
         """
-        Rotate the internal rotation matrix
+        Rotate the internal rotation matrix, applied after any previous
+        rotations
         :param rotations: Matrix NxN, rotations by angle pairs
         :return: Simplex object
         """
@@ -140,10 +141,10 @@ class Simplex:
         if len(shape) == 2:
             if shape == self._rotation.shape:
                 rotation_matrix = create_rotation_matrix(rotations, debug=False)
+                # new rotation goes on the left so it acts on the
+                # already rotated points
                 self._rotation = \
-                    np.transpose(
-                        np.matmul(rotation_matrix,
-                              np.transpose(self._rotation)))
+                    np.matmul(np.transpose(rotation_matrix), self._rotation)
             else:
                 raise ValueError(
                     "rotate_matrix dims [{0}] not supported".format(shape))

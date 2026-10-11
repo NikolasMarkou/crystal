@@ -1,10 +1,10 @@
 import warnings
-from typing import Sequence, Tuple
+from typing import Optional, Sequence, Tuple
 
 import numpy as np
 
 __author__ = "Nikolas Markou"
-__version__ = "0.1.0"
+__version__ = "0.2.0"
 __license__ = "MIT"
 
 # ==============================================================================
@@ -61,7 +61,7 @@ def create_rotation_matrix(
 def create_rotation_matrix_by_list(
         dimensions: int,
         rotations: Sequence[Tuple[int, int, float]],
-        cutoff_decimals: int = -1,
+        cutoff_decimals: Optional[int] = -1,
         debug: bool = False) -> np.ndarray:
     """
     Create an n-th dimensional rotation matrix based on rotation angles provided.

@@ -6,7 +6,7 @@ Python library for creating and manipulating N-dimensional simplexes as a neural
 
 ```bash
 make init     # Install dependencies
-make test     # Run tests (pytest -sv)
+make test     # Run tests (python3 -m pytest -sv)
 make build    # Build package
 make install  # Install package
 ```
@@ -19,7 +19,7 @@ crystal/
 │   ├── simplex.py        # Simplex creation and Simplex class
 │   ├── rotation_matrix.py # N-dimensional rotation matrices
 │   └── distributions.py   # Wigner semicircle PDF functions
-├── tests/                # pytest test suite (71 tests, 1D-1000D coverage)
+├── tests/                # pytest test suite (72 tests, 1D-1000D coverage)
 └── main.py               # Demo script
 ```
 

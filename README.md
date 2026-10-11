@@ -163,9 +163,9 @@ simplex = crystal.Simplex(
     distance=-1)  # Auto-calibrate
 m = simplex.matrix
 m2 = np.matmul(m, np.transpose(m)) / input_dims
-w = np.linalg.eigvals(m2)
+w = np.linalg.eigvalsh(m2)  # m2 is symmetric, eigenvalues are real
 max_eigenvalue = np.max(w)
-# max_eigenvalue ≈ 1.0
+# max_eigenvalue == 1.0 (up to floating point error)
 ```
 
 ## Deep Learning Usage (Keras)

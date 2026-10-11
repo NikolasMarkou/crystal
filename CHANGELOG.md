@@ -8,8 +8,13 @@ All notable changes to this project will be documented in this file.
 - **Eigenvalue auto-calibration (behavior change)**: auto-calibrated `Simplex` (`distance <= 0` or `None`) now uses `d = sqrt(2N)`, so the max eigenvalue of `(MM^T / N)` is exactly 1.0. The 0.2.0 formula gave `λ_max = N/(N+1)` (0.5 at N=1). Auto-calibrated simplexes are now larger by a factor of `sqrt((N+1)/N)`. Simplexes created with an explicit `distance > 0` are unchanged.
 - `Simplex` raises `ValueError` when `output_dims > input_dims + 1` (previously appended duplicate points at the centroid).
 - Type hint for `create_rotation_matrix_by_list` `rotations` is now `Sequence[Tuple[int, int, float]]` (was the list literal `[tuple]`).
+- **`Simplex.rotate` composition order (behavior change)**: chained calls now apply rotations in call order, so `rotate(a).rotate(b)` rotates by `a` and then by `b`. Previously the later rotation was applied first, which differed whenever the rotations do not commute. A single `rotate` call is unchanged.
+- Type hints for `Simplex` `distance` and `cutoff_decimals` are `Optional`, since both accept `None`.
+- Module `__version__` strings now match the package version (0.2.0).
+- `make test` runs `python3 -m pytest` so the tests import the local package without installing it.
 
 ### Changed
+- `CLAUDE.md` renamed to `AGENTS.md`.
 - `create_simplex_matrix` scales with one vectorized multiply instead of a per-row loop (same output).
 - `output_dims` is optional (defaults to `input_dims + 1`).
 

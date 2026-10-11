@@ -8,7 +8,7 @@ install:
 	python setup.py install
 
 test:
-	pytest -sv
+	python3 -m pytest -sv
 
 clean:
 	rm -rf build dist

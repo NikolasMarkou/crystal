@@ -152,3 +152,19 @@ def test_simplex_class_output_dims_subset_equidistant():
         for j in range(i + 1, 4):
             dist_ij = np.linalg.norm(m[i] - m[j], ord=2)
             assert dist_ij == pytest.approx(1., abs=1e-9)
+
+
+def test_simplex_class_rotate_composes_in_call_order():
+    rng = np.random.default_rng(0)
+    angles_a = rng.uniform(-np.pi, np.pi, (4, 4))
+    angles_b = rng.uniform(-np.pi, np.pi, (4, 4))
+    r_a = crystal.create_rotation_matrix(angles_a)
+    r_b = crystal.create_rotation_matrix(angles_b)
+    # the two rotations do not commute, so the order is observable
+    assert not np.allclose(r_a @ r_b, r_b @ r_a)
+    s = crystal.Simplex(4, distance=1.)
+    rotated_a = crystal.Simplex(4, distance=1.).rotate(angles_a).matrix
+    # rotate(b) must act on the points already rotated by a
+    expected = np.transpose(np.matmul(np.transpose(r_b), np.transpose(rotated_a)))
+    m = s.rotate(angles_a).rotate(angles_b).matrix
+    assert np.allclose(m, expected, atol=1e-12)
