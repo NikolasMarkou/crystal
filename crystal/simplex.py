@@ -27,7 +27,6 @@ def create_simplex_matrix(
         raise ValueError("distance should be > 0")
     # --------------------------------
     # An N-Dimensional simplex requires N+1 points
-    points = dimensions + 1
     # create identity matrix (N points)
     matrix = np.identity(dimensions, dtype=np.float64)
     # we create the last point
@@ -39,17 +38,9 @@ def create_simplex_matrix(
     # center points to zero
     mean_m = np.mean(matrix, axis=0)
     matrix = matrix - mean_m
-    # all points now have sqrt(2) distance between them
-    # points lie on the surface of an n-dimensional circle
-    # calculate the radius of that circle
-    radius = np.mean(np.linalg.norm(matrix, ord=2, axis=1))
-    # angle between origin center (0)
-    # a point A and the midpoint intersection
-    sin_theta = (np.sqrt(2) / 2.) / radius
-    # go through the points and normalize into the set distance
-    for i in range(points):
-        norm2 = np.linalg.norm(matrix[i], ord=2)
-        matrix[i] = matrix[i] * ((distance / (sin_theta * 2.)) / norm2)
+    # every pair of points is now sqrt(2) apart (the identity rows are, and
+    # the last point is built equidistant), so one uniform scale sets the distance
+    matrix *= distance / np.sqrt(2.0)
     return matrix
 
 
