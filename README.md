@@ -36,7 +36,7 @@ $$\cos\theta = -\frac{1}{N}$$
 
 so as N grows, vertex vectors become increasingly close to orthogonal.
 
-* **Gram matrix:** for vertex matrix $M$ (rows are vertex coordinates), the Gram matrix $MM^T$ encodes all pairwise dot products. For a regular simplex centered at the origin, this matrix has a single large eigenvalue and N equal smaller eigenvalues, a structure that makes simplexes useful as maximally-separated, symmetric initializations.
+* **Gram matrix:** for vertex matrix $M$ (rows are vertex coordinates), the Gram matrix $MM^T$ encodes all pairwise dot products. For a regular simplex centered at the origin, this matrix has one zero eigenvalue (the centered vertices sum to zero) and N equal non-zero eigenvalues $\frac{d^2}{2}$, a structure that makes simplexes useful as maximally-separated, symmetric initializations.
 * **Volume:** the N-dimensional volume of a regular N-simplex with edge length $d$ is
 
 $$V = \frac{d^N}{N!}\sqrt{\frac{N+1}{2^N}}$$
@@ -135,7 +135,7 @@ simplex.rotate(rotations).move(offsets)
 ### Eigenvalue Auto-Calibration
 
 The `Simplex` class automatically calibrates the distance between points so that
-the maximum eigenvalue of the scaled Gram matrix is exactly 1.0. This is critical
+the maximum eigenvalue of the scaled Gram matrix is exactly 1.0 for the simplex centered at the origin (before `move`). This is critical
 for numerical stability when stacking these structures in deep networks.
 
 #### Mathematical Foundation
