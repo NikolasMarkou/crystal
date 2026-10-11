@@ -28,7 +28,7 @@ logger = logging.getLogger("crystal")
 
 if __name__ == "__main__":
     input_dims = 3
-    output_dims = 10
+    output_dims = 4
     s = crystal.Simplex(
             input_dims=input_dims,
             output_dims=output_dims,

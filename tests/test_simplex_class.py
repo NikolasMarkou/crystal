@@ -131,3 +131,24 @@ def test_simplex_class_eigenvalues_201x200():
     t = _simplex_class_eigenvalues_nxm(200)
     t()
 
+
+
+def test_simplex_class_output_dims_too_large_raises():
+    with pytest.raises(ValueError):
+        crystal.Simplex(5, 7)
+
+
+def test_simplex_class_output_dims_default():
+    s = crystal.Simplex(5)
+    assert s.matrix.shape == (6, 5)
+    assert s.output_dims == 6
+
+
+def test_simplex_class_output_dims_subset_equidistant():
+    s = crystal.Simplex(5, 4, distance=1.)
+    m = s.matrix
+    assert m.shape == (4, 5)
+    for i in range(4):
+        for j in range(i + 1, 4):
+            dist_ij = np.linalg.norm(m[i] - m[j], ord=2)
+            assert dist_ij == pytest.approx(1., abs=1e-9)

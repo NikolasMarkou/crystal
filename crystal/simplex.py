@@ -1,4 +1,5 @@
 import numpy as np
+from typing import Optional
 from .rotation_matrix import create_rotation_matrix
 
 __author__ = "Nikolas Markou"
@@ -51,13 +52,14 @@ class Simplex:
     # ------------------------------------------------------------------------------
     def __init__(self,
                  input_dims: int,
-                 output_dims: int,
+                 output_dims: Optional[int] = None,
                  distance: float = 0.0):
         """
         Create encapsulated simplex with offset and rotation matrices hidden
         internally
-        :param input_dims:
-        :param output_dims:
+        :param input_dims: number of dimensions N
+        :param output_dims: number of vertices to keep, 1..N+1,
+            if None or <= 0, all N+1 vertices are kept
         :param distance: set manually the distance,
             if <= 0 or None, auto-calibrated to sqrt(2 * input_dims) so the
             max eigenvalue of (M M^T / input_dims) is 1
@@ -68,6 +70,10 @@ class Simplex:
             raise ValueError("input dims should be > 0")
         if output_dims is None or output_dims <= 0:
             output_dims = input_dims + 1
+        if output_dims > input_dims + 1:
+            raise ValueError(
+                "output_dims should be <= input_dims + 1 "
+                "(an N-simplex has N+1 vertices)")
         if distance is None or distance <= 0:
             # auto-calibrate distance so max eigenvalue of (MM^T / N) is 1.0
             # the Gram matrix MM^T of a centered regular simplex with edge d
@@ -85,13 +91,7 @@ class Simplex:
             dimensions=self._input_dims,
             distance=self._distance)
         # --------------------------------
-        diff_dims = abs(self._output_dims - self._input_dims)
-        if diff_dims > 0:
-            tmp = np.vstack(
-                [tmp,
-                 np.zeros(shape=(diff_dims, self._input_dims), dtype=np.float64)])
-        # --------------------------------
-        self._simplex = tmp[0:self._output_dims, 0:self._input_dims]
+        self._simplex = tmp[:self._output_dims]
         self._offset = np.zeros(shape=(1, self._input_dims), dtype=np.float64)
         self._rotation = np.identity(self._input_dims, dtype=np.float64)
 
