@@ -46,7 +46,7 @@ pdf_values = crystal.pdf(simplex, points, crystal.wigner_semicircle_distribution
 ## Key Concepts
 
 - **Simplex**: Regular N-dimensional geometric structure where all vertices are equidistant
-- **Auto-calibration**: When `distance <= 0`, uses exact formula `d = sqrt(2N² / (N+1))` so max eigenvalue of `(MM^T / N)` ≈ 1.0
+- **Auto-calibration**: When `distance <= 0`, uses exact formula `d = sqrt(2N)` so max eigenvalue of `(MM^T / N)` = 1.0
 - **Wigner semicircle**: Distribution from random matrix theory: `p(x) = (2/πr²) * sqrt(r² - x²)`
 - **Givens rotations**: N-dimensional rotation via composition of 2D planar rotations
 
@@ -66,7 +66,7 @@ pdf_values = crystal.pdf(simplex, points, crystal.wigner_semicircle_distribution
 ### Eigenvalue Calibration
 For max eigenvalue λ = 1 in scaled Gram matrix `(MM^T / N)`:
 ```
-distance = sqrt((2 * N²) / (N + 1))
+distance = sqrt(2 * N)
 ```
 
 ### Rotation Matrix Complexity
@@ -76,7 +76,7 @@ Optimized implementation: O(N³) for N dimensions. Each Givens rotation is appli
 
 Tests cover dimensions from 1D to 1000D:
 - `test_simplex.py`: Simplex centering and distance properties
-- `test_simplex_class.py`: Simplex class and eigenvalue calibration (λ_max ≈ 1.0 ± 0.1)
+- `test_simplex_class.py`: Simplex class and eigenvalue calibration (λ_max = 1.0 ± 1e-6)
 - `test_rotations.py`: Rotation orthogonality (R @ R^T = I) and distance preservation
 - `test_distributions.py`: Wigner semicircle PDF calculations
 

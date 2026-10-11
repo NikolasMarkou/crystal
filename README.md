@@ -136,17 +136,17 @@ simplex.rotate(rotations).move(offsets)
 ### Eigenvalue Auto-Calibration
 
 The `Simplex` class automatically calibrates the distance between points so that
-the maximum eigenvalue of the scaled Gram matrix is approximately 1.0. This is critical
+the maximum eigenvalue of the scaled Gram matrix is exactly 1.0. This is critical
 for numerical stability when stacking these structures in deep networks.
 
 #### Mathematical Foundation
 
 For a regular simplex with side length $d$ centered at the origin, the non-zero eigenvalues
-of the scaled Gram matrix $\frac{1}{N}MM^T$ are approximately $\lambda \approx \frac{d^2}{2N}$.
+of the scaled Gram matrix $\frac{1}{N}MM^T$ are all equal to $\lambda = \frac{d^2}{2N}$.
 
 To achieve $\lambda_{max} = 1$, the exact analytic solution is:
 
-$$d = \sqrt{\frac{2N^2}{N+1}}$$
+$$d = \sqrt{2N}$$
 
 When `distance <= 0` is passed to the constructor, this formula is applied automatically.
 

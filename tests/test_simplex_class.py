@@ -71,10 +71,30 @@ def _simplex_class_eigenvalues_nxm(input_dims):
         assert sum_s == pytest.approx(0., 0.01)
         m = s.matrix
         m2 = np.matmul(m, np.transpose(m)) / input_dims
-        w = np.linalg.eigvals(m2)
+        w = np.linalg.eigvalsh(m2)
         max_eigenvalue = np.max(w)
-        assert max_eigenvalue == pytest.approx(1., abs=0.1)
+        assert max_eigenvalue == pytest.approx(1., abs=1e-6)
     return _test
+
+
+def test_simplex_class_eigenvalues_2x1():
+    t = _simplex_class_eigenvalues_nxm(1)
+    t()
+
+
+def test_simplex_class_eigenvalues_3x2():
+    t = _simplex_class_eigenvalues_nxm(2)
+    t()
+
+
+def test_simplex_class_eigenvalues_4x3():
+    t = _simplex_class_eigenvalues_nxm(3)
+    t()
+
+
+def test_simplex_class_eigenvalues_6x5():
+    t = _simplex_class_eigenvalues_nxm(5)
+    t()
 
 
 def test_simplex_class_eigenvalues_11x10():

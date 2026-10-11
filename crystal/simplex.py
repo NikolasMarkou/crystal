@@ -68,7 +68,8 @@ class Simplex:
         :param input_dims:
         :param output_dims:
         :param distance: set manually the distance,
-            if <= 0, it is auto-calibrated so max eigenvalue is ~1
+            if <= 0 or None, auto-calibrated to sqrt(2 * input_dims) so the
+            max eigenvalue of (M M^T / input_dims) is 1
         """
         # --------------------------------
         # argument checking
@@ -77,9 +78,12 @@ class Simplex:
         if output_dims is None or output_dims <= 0:
             output_dims = input_dims + 1
         if distance is None or distance <= 0:
-            # auto-calibrate distance so max eigenvalue of (MM^T / N) is ~1.0
-            # Exact analytic solution derived from Gram matrix eigenvalues
-            distance = np.sqrt((2.0 * input_dims ** 2) / (input_dims + 1))
+            # auto-calibrate distance so max eigenvalue of (MM^T / N) is 1.0
+            # the Gram matrix MM^T of a centered regular simplex with edge d
+            # has N equal nonzero eigenvalues d**2 / 2, so
+            # max eigenvalue of (MM^T / N) = d**2 / (2N), which is 1 at
+            # d = sqrt(2N)
+            distance = np.sqrt(2.0 * input_dims)
         # --------------------------------
         self._distance = distance
         self._input_dims = input_dims
