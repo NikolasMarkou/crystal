@@ -17,10 +17,10 @@ def _forward_backwards_rotation_matrix(dims, angle):
         zeros_minus[x][y] -= angle
 
         rotation_matrix_plus_pi_4 = crystal.create_rotation_matrix(
-            zeros_plus, cutoff_decimals=10)
+            zeros_plus)
 
         rotation_matrix_minus_pi_4 = crystal.create_rotation_matrix(
-            zeros_minus, cutoff_decimals=10)
+            zeros_minus)
 
         result = np.matmul(
             rotation_matrix_plus_pi_4,
@@ -193,3 +193,18 @@ def test_retain_distances_100():
     t()
 
 
+def test_rotation_matrix_orthogonal_dims50():
+    dims = 50
+    angles = np.random.default_rng(0).uniform(-np.pi, np.pi, (dims, dims))
+    rotation_matrix = crystal.create_rotation_matrix(angles)
+    identity = np.identity(dims, dtype=np.float64)
+    assert np.max(np.abs(rotation_matrix @ rotation_matrix.T - identity)) < 1e-12
+    assert abs(np.linalg.det(rotation_matrix) - 1.) < 1e-12
+
+
+def test_rotation_matrix_cutoff_decimals_deprecated():
+    angles = np.random.default_rng(0).uniform(-np.pi, np.pi, (5, 5))
+    expected = crystal.create_rotation_matrix(angles)
+    with pytest.warns(DeprecationWarning):
+        result = crystal.create_rotation_matrix(angles, cutoff_decimals=5)
+    assert np.array_equal(result, expected)

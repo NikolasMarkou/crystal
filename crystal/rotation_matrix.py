@@ -1,3 +1,6 @@
+import warnings
+from typing import Sequence, Tuple
+
 import numpy as np
 
 __author__ = "Nikolas Markou"
@@ -57,9 +60,9 @@ def create_rotation_matrix(
 
 def create_rotation_matrix_by_list(
         dimensions: int,
-        rotations: [tuple],
-        cutoff_decimals=-1,
-        debug=False) -> np.ndarray:
+        rotations: Sequence[Tuple[int, int, float]],
+        cutoff_decimals: int = -1,
+        debug: bool = False) -> np.ndarray:
     """
     Create an n-th dimensional rotation matrix based on rotation angles provided.
 
@@ -68,10 +71,19 @@ def create_rotation_matrix_by_list(
 
     :param dimensions: dimension N of the final NxN matrix
     :param rotations: list of tuples (axis0, axis1, angle in radians)
-    :param cutoff_decimals: number of decimals to keep per rotation
+    :param cutoff_decimals: deprecated, ignored (rounding broke orthogonality);
+        kept for backward compatibility
     :param debug: Show individual rotation matrices
     :return: NxN rotation matrix
     """
+    if cutoff_decimals is not None and cutoff_decimals > 0:
+        # stacklevel=3 points at the caller of create_rotation_matrix,
+        # the public entry point that forwards this kwarg
+        warnings.warn(
+            "cutoff_decimals is deprecated and ignored: "
+            "rounding breaks orthogonality",
+            DeprecationWarning,
+            stacklevel=3)
     matrix = np.identity(dimensions, dtype=np.float64)
     # --------------------------------
     # Apply Givens rotations directly to rows instead of full matrix multiply.
@@ -81,9 +93,6 @@ def create_rotation_matrix_by_list(
         dim_0, dim_1, theta = rotation
         cos_theta = np.cos(theta)
         sin_theta = np.sin(theta)
-        if cutoff_decimals and cutoff_decimals > 0:
-            cos_theta = np.round(cos_theta, decimals=cutoff_decimals)
-            sin_theta = np.round(sin_theta, decimals=cutoff_decimals)
         if debug:
             print("rotation [{0}]: cos={1}, sin={2}".format(
                 rotation, cos_theta, sin_theta))
@@ -92,8 +101,6 @@ def create_rotation_matrix_by_list(
         row_1 = matrix[dim_1].copy()
         matrix[dim_0] = cos_theta * row_0 - sin_theta * row_1
         matrix[dim_1] = sin_theta * row_0 + cos_theta * row_1
-    if cutoff_decimals and cutoff_decimals > 0:
-        matrix = np.round(matrix, decimals=cutoff_decimals)
     return matrix
 
 # ==============================================================================

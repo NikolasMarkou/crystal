@@ -87,21 +87,20 @@ O(N³) complexity, making it efficient even for high-dimensional spaces
 (tested up to 1000D).
 
 1. An NxN matrix, where each point i,j defines a rotation in radians around that axis pair.
-2. Second argument defines the cutoff in decimals and is optional.
 
 ```python
 import crystal
+import numpy as np
 
 rotation_matrix = crystal.create_rotation_matrix(
     np.array([
         [0, np.pi/4, 0],
         [0, 0, np.pi/4],
-        [0, 0, 0]]),
-    cutoff_decimals=5)
+        [0, 0, 0]]))
 # rotation_matrix =
-# [[ 0.70711    -0.70711     0.        ]
-#  [ 0.50000455  0.50000455 -0.70711   ]
-#  [ 0.50000455  0.50000455  0.70711   ]]
+# [[ 0.70710678 -0.70710678  0.        ]
+#  [ 0.5         0.5        -0.70710678]
+#  [ 0.5         0.5         0.70710678]]
 ```
 
 ## Simplex Class
