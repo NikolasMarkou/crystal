@@ -190,7 +190,7 @@ from keras import layers, ops
 input_dims = 128
 num_classes = input_dims + 1  # an N-dim simplex has N+1 vertices
 
-M = crystal.create_simplex_matrix(input_dims, distance=-1)  # auto-calibrated, (N+1, N)
+M = crystal.Simplex(input_dims, num_classes, distance=-1).matrix  # auto-calibrated, (N+1, N)
 
 class SimplexHead(layers.Layer):
     def __init__(self, simplex_matrix, **kwargs):

@@ -19,7 +19,7 @@ crystal/
 │   ├── simplex.py        # Simplex creation and Simplex class
 │   ├── rotation_matrix.py # N-dimensional rotation matrices
 │   └── distributions.py   # Wigner semicircle PDF functions
-├── tests/                # pytest test suite (62 tests, 1D-1000D coverage)
+├── tests/                # pytest test suite (71 tests, 1D-1000D coverage)
 └── main.py               # Demo script
 ```
 
